@@ -1,0 +1,29 @@
+{% extends './svn/layout.html' %}
+
+{% block title %}SVN权限添加{% endblock %}
+
+{% block body_content %}
+
+    <ul>
+        <li>SVN 权限添加，可直接提供SVN的http路径</li>
+    </ul>
+    <div class="container-fluid">
+        <div class="from-group">
+            <!-- User List-->
+            <div class="col-md-6">
+                <from class="form-horizontal">
+                    <label>用户列表</label>
+                </from>
+            </div>
+            <!--SVN Address-->
+            <div class="col-md-6">
+                <from class="form-horizontal">
+                    <label for="" class="control-label">SVN地址</label>
+                    {{ form.hidden_tag() }}
+                    {{ form.svnlist(class="form-control", rows="5") }}
+                </from>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

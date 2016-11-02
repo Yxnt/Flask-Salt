@@ -1,0 +1,7 @@
+{% macro render_sidebar(endpoint, text, icon, icon_size) %}
+{% if request.endpoint.endswith(endpoint) %}
+<li class="active"><a href="{{ url_for(endpoint) }}"><i class="fa {{ icon }} {{ icon_size }}"></i><span> {{ text }}</span></a><span class="pull-right-container"></span></li>
+{% else %}
+<li class=""><a href="{{ url_for(endpoint) }}"><i class="fa {{ icon }} {{ icon_size }}"></i><span> {{ text }}</span></a><span class="pull-right-container"></span></li>
+{% endif %}
+{% endmacro %}
