@@ -6,6 +6,8 @@ Flask-Salt
 * 开发环境：Python 3.5
 * Web框架：Flask 0.11.1
 * 数据库： Mysql 5.7
+
+
 ----
 
 目前功能：
