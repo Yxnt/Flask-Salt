@@ -6,7 +6,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db
+from app import db, login_manager
 
 
 class User(UserMixin, db.Model):
@@ -39,11 +39,8 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return "<User> %s" % self.user_name
 
-
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(user_id)
-
+    def get_id(self):
+        return str(self.user_id)
 
 
 class Group(db.Model):
@@ -61,7 +58,14 @@ class Host(db.Model):
     host_name = db.Column(db.VARCHAR(36), unique=True, nullable=False)
     host_group = db.Column(db.VARCHAR(10), db.ForeignKey('salt_group.group_name'), nullable=False)
 
+    # host_status = db.Column(db.VARCHAR(6), nullable=False)
+    # last_time = db.Column(db.TIMESTAMP(), nullable=False)
+
     def __init__(self, hostname, groupname):
         self.host_name = hostname
         self.host_group = groupname
 
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

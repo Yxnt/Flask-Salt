@@ -3,6 +3,7 @@
 # __author__: Yxn
 # date: 2016/10/25
 
+
 import json
 import os
 from collections import OrderedDict
@@ -10,17 +11,18 @@ from collections import OrderedDict
 from requests import session, get
 
 from app import config
-from .logger import log
 
+# 读取配置文件
 config = config[os.environ.get('FLASK_ENV') or 'dev']
 
 
-class SaltApi():
+# 调用SaltAPI
+class SaltApi(object):
     headers = {'Accept': 'application/json'}
     url = config.SALT_URL
     user = config.SALT_USER
     passwd = config.SALT_PASS
-    result = OrderedDict()
+    result = OrderedDict()  # 结果返回为一个有序字典
 
     @staticmethod
     def post(url, data, headers):
@@ -31,10 +33,9 @@ class SaltApi():
         datainfo = {
             'client': 'local',
             'tgt': tgtlist,
-            'expr_form': 'list',
+            'expr_form': 'list',  # 操作多个主机
             'fun': fun,
             'arg': arg
-
         }
         return datainfo
 
@@ -77,8 +78,6 @@ class SaltApi():
         self.result['version'] = version
         self.result['username'] = username
         self.result['result'] = json.loads(response.text)['return']
-        # self.result['result'].append()
-        log.info(self.result)
         return self.result
 
     def command(self, cmd):
@@ -96,17 +95,14 @@ class SaltApi():
         self.result['operator'] = fun
         self.result['arg'] = arg
         self.result['result'] = json.loads(response.text)['return'][0]
-        log.info(self.result)
+
         return self.result
 
     def getjid(self, tgtlist):
         url = "%s/jobs/%s" % (self.url, self.testping(tgtlist))
 
-        print(get(url, headers=self.login, timeout=3000).text)
+        print(get(url, headers=self.login).text)
 
-
-        # result = json.loads(response.text)['info'][0]['Result']
-        # print(result)
-
-    def get_minion(self):
-        pass
+    def get_minion(self, minion):
+        if minion or minion != '*':
+            url = '%s/minion/%s'

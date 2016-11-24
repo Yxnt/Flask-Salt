@@ -9,11 +9,9 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CsrfProtect
 
-from config import development, production, staging
+from config import development, production
 from .utils import assets
 from .utils.assets import bundles
-from .utils.logger import log
-import os
 
 login_manager = LoginManager()
 csrf = CsrfProtect()
@@ -24,13 +22,14 @@ config = {
     'pro': production.Production,
 }
 
+app = Flask(__name__)
+
 
 def create_app(config_name):
-    app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
     login_manager.session_protection = "strong"
-    login_manager.login_view = 'users.login'
+    login_manager.login_view = 'users.login' # 未认证用户跳转
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
@@ -42,17 +41,19 @@ def create_app(config_name):
     from .views.svn import svn
     from .views.users import user
     from .views.publish import publish
+    from .views.default import default
 
     # Blueprint
     app.register_blueprint(cdn)  # 日志下载页面
     app.register_blueprint(svn)  # svn管理
     app.register_blueprint(user)  # 注册用户页面
-    app.register_blueprint(publish)
-    app.register_blueprint(dashboard)
+    app.register_blueprint(publish) # 发布
+    app.register_blueprint(dashboard) # 后台页面
+    app.register_blueprint(default) # 默认访问/
 
-    # Log
-    if not app.debug:
-        app.logger.addHandler(log)
+    # # Log
+    # if not app.debug:
+    #     app.logger.addHandler(handler)
 
 
     return app

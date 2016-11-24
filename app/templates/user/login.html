@@ -13,7 +13,8 @@
         <link rel="stylesheet" href="{{ ASSET_URL }}">
     {% endassets %}
     <!-- Ionicons -->
-    <link rel="stylesheet" href="http://code.ionicframework.online/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/lib/icheck/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/lib/ionicons/ionicons.min.css') }}">
     <!-- Theme style -->
 
 
@@ -27,33 +28,33 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="{{ url_for('dashboard.index') }}"><b>Admin</b>LTE</a>
+        <a href="{{ url_for('dashboard.index') }}"><b>Uzai</b>运维平台</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg"></p>
+        <p class="login-box-msg">
+            {% for message in get_flashed_messages(category_filter=['error','usererror']) %}
+                {{ message }}{% endfor %}</p>
 
         <form action="{{ url_for('users.auth') }}" method="post" id="login_form">
             {{ login_form.hidden_tag() }}
 
             <div class="form-group has-feedback">
-{#                <input type="email" class="form-control" placeholder="Email">#}
+                {#                <input type="email" class="form-control" placeholder="Email">#}
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 {{ login_form.username(size='20', class="form-control", placeholder="用户名或者邮箱") }}
 
             </div>
             <div class="form-group has-feedback">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-{#                <input type="password" class="form-control" placeholder="Password">#}
+                {#                <input type="password" class="form-control" placeholder="Password">#}
                 {{ login_form.password(size='32', class="form-control", placeholder="密码") }}
 
             </div>
             <div class="row">
                 <div class="col-xs-8">
                     <div class="checkbox icheck">
-                        <label>
-                            <input type="checkbox" checked> Remember Me
-                        </label>
+                        {{ login_form.rember }} Rember Me
                     </div>
                 </div>
                 <!-- /.col -->
@@ -69,49 +70,52 @@
         </div>
         <!-- /.social-auth-links -->
 
-        <a href="#">忘记密码</a><br>
+        {#        <a href="#">忘记密码</a>#}
+        {#        <br>#}
 
 
     </div>
     <!-- /.login-box-body -->
+    {% assets "common_js" %}
+        <script type="application/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 </div>
-<!-- /.login-box -->
-{#{% assets "user_login_js" %}#}
-{#    <script type="application/javascript" src="{{ ASSET_URL }}"></script>#}
-{#{% endassets %}#}
-<!-- jQuery 2.2.3 -->
-{#<script src="../../plugins/jQuery/jquery.min.js"></script>#}
-{#<!-- Bootstrap 3.3.6 -->#}
-{#<script src="../../bootstrap/js/bootstrap.min.js"></script>#}
-{#<!-- iCheck -->#}
-{#<script src="../../plugins/iCheck/icheck.min.js"></script>#}
-<script>
-    $(function () {
-        $("#login_form").validate({
-            rules:{
-                username:{
-                    required: true,
-                    minlength: 4
+
+<script type="application/javascript" src="{{ url_for("static",filename='js/lib/icheck/icheck.js') }}"></script>
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('#rember').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                increaseArea: '20%' // optional
+            });
+            $("#login_form").validate({
+                rules: {
+                    username: {
+                        required: true,
+                        minlength: 4
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 16
+                    }
                 },
-                password:{
-                    required: true,
-                    minlength: 6,
-                    maxlength: 16
+                messages: {
+                    username: {
+                        required: "用户名不能为空",
+                        minlength: "最少输入4个字符"
+                    },
+                    password: {
+                        required: "密码不能为空",
+                        minlength: "最少输入6个字符",
+                        maxlength: "最多输入16个字符"
+                    }
                 }
-            },
-            messages:{
-                username:{
-                    required: "用户名不能为空",
-                    minlength: "最少输入4个字符"
-                },
-                password:{
-                    required: "密码不能为空",
-                    minlength: "最少输入6个字符",
-                    maxlength: "最多输入16个字符"
-                }
-            }
-        })
-    })
-</script>
+            });
+
+        });
+    </script>
+{% endblock %}
 </body>
 </html>

@@ -9,7 +9,7 @@ from wtforms.validators import DataRequired
 
 
 class push(FlaskForm):
-    project = StringField("项目", validators=[DataRequired()])
+    path = TextAreaField("路径", validators=[DataRequired()])
     version = StringField('版本号',validators=[DataRequired()])
     username = StringField("用户名", validators=[DataRequired()])
     password = PasswordField("密码", validators=[DataRequired()])

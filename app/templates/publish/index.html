@@ -30,10 +30,7 @@
                 </tr>
                 {% for groupitem in grouplist %}
                     {% set groupname = groupitem.group_name %}
-                    <tr>
-                        <td><label for="{{ groupname }}"><input type="radio"
-                                                                id="{{ groupname }}"
-                                                                name="group" value="{{ groupname }}">{{ groupname }}
+                    <tr><td><label for="{{ groupname }}"><input type="radio" id="{{ groupname }}" name="group" value="{{ groupname }}">{{ groupname }}
                         </label></td>
                         <td>
                             {% for hostitem in hostlist %}
@@ -42,7 +39,7 @@
                                 {% if hostgroup == groupname %}
                                     <span class="col-md-2"><label for="{{ hostname }}"><input
                                             id={{ hostname }} type="checkbox"
-                                            name="{{ hostname }}" value="host">{{ hostname }}&nbsp;
+                                            name="host" value="{{ hostname }}">{{ hostname }}&nbsp;
                                     </label></span>
                                 {% endif %}
                             {% endfor %}
@@ -50,51 +47,51 @@
                     </tr>
                 {% endfor %}
             </table>
+            <!--操作按钮-->
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="form-group">
+                        {{ form.path.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.path(class="form-control", rows="10", placeholder="线上文件路径") }}
+                        </div>
 
-            <div class="form-group">
-                {{ form.project.label(class="control-label col-sm-1 pull-left") }}
-                <div class="col-sm-1">
-                    {{ form.project(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.version.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-2">
+                            {{ form.version(class="form-control", placeholder="版本号") }}
+                        </div>
+                        {{ form.username.label(class="col-sm-2 control-label" ) }}
+                        <div class="col-sm-2">
+                            {{ form.username(class="form-control", placeholder="用户名" ) }}
+                        </div>
+                        {{ form.password.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-2">
+                            {{ form.password(class="form-control", placeholder="密码") }}
+                        </div>
+                    </div>
                 </div>
-                {{ form.version.label(class="control-label col-sm-1 pull-left") }}
-                <div class="col-sm-1">
-                    {{ form.version(class="form-control") }}
-                </div>
-                {{ form.username.label(class="control-label col-sm-1 pull-left") }}
-                <div class="col-sm-1">
-                    {{ form.username(class="form-control") }}
-                </div>
-                {{ form.password.label(class="control-label col-sm-1 pull-left") }}
-                <div class="col-sm-1">
-                    {{ form.password(class="form-control") }}
+                <div class="form-group">
+                    <div class="col-md-2 col-md-offset-2">
+                        <label class="control-label">
+                            <input type="submit" class="btn btn-primary " value="提交">
+                        </label>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label">
+                            <input type="submit" class="btn btn-danger " value="回滚上一个版本">
+                        </label>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-
-                <div class="col-md-1 col-md-offset-1">
-                    <label class="control-label">
-                        <input type="submit" class="btn btn-primary " value="提交">
-                    </label>
-                </div>
-                <div class="col-md-1 ">
-                    <label class="control-label">
-                        <input type="submit" class="btn btn-danger " value="回滚">
-                    </label>
-                </div>
+            <!--结果返回-->
+            <div class="col-md-6">
+                <textarea class="form-control" name="result" id="result" cols="30" rows="20" disabled>{% for message in  get_flashed_messages(with_categories=False,category_filter=['info']) %}{{ message }}{% endfor %}</textarea>
             </div>
 
-            {#            <div class="form-group">#}
-            {#                <label class="control-label" for="submit">#}
-            {#                    <div class="col-md-1 col-md-offset-12">#}
-            {#                        <input id="submit" type="submit" class="btn btn-primary" value="更新">#}
-            {#                    </div>#}
-            {#                </label>#}
-            {#            </div>#}
         </form>
-        <div class="row">
-            <br>
-            <textarea class="form-control" name="result" id="result" cols="30" rows="17" disabled>{% for message in  get_flashed_messages(with_categories=False,category_filter=['info']) %}{{ message }}{% endfor %}</textarea>
-        </div>
+
 
     </div>
 
@@ -110,7 +107,9 @@
 
 {% block script %}
     <script>
+        var path = window.location.pathname
         $(document).ready(function () {
+
             $('input').iCheck({
                 checkboxClass: 'icheckbox_square-blue',
                 radioClass: 'iradio_square-blue',

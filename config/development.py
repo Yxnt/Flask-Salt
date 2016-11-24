@@ -5,6 +5,12 @@
 
 
 from . import Config
+import os
+try:
+    from app.utils.logger import handler
+except:
+    os.mkdir('log')
+    from app.utils.logger import handler
 
 
 class development(Config):
@@ -15,3 +21,6 @@ class development(Config):
     SALT_PASS = '1234'
 
 
+    def init_app(app):
+
+        app.logger.addHandler(handler)
