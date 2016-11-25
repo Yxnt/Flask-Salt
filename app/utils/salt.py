@@ -16,8 +16,8 @@ from app import config
 config = config[os.environ.get('FLASK_ENV') or 'dev']
 
 
-# 调用SaltAPI
 class SaltApi(object):
+    '''调用saltAPI来完成操作'''
     headers = {'Accept': 'application/json'}
     url = config.SALT_URL
     user = config.SALT_USER
@@ -29,7 +29,8 @@ class SaltApi(object):
         response = session().post(url, data=data, headers=headers)
         return response
 
-    def datainfo(self, tgtlist, fun, arg):
+    @staticmethod
+    def datainfo(tgtlist, fun, arg):
         datainfo = {
             'client': 'local',
             'tgt': tgtlist,
@@ -41,7 +42,8 @@ class SaltApi(object):
 
     @property
     def login(self):
-        login_url = "%s/login" % self.url
+        '''登陆saltapi'''
+        login_url = "{domain}/login".format(domain=self.url)
         logininfo = {
             'username': self.user,
             'password': self.passwd,
@@ -55,6 +57,7 @@ class SaltApi(object):
         return data
 
     def svnupdate(self, tgtlist, version, path, username, password, fun='cmd.run'):
+        '''svn更新函数，'''
         cmd = 'svn update -r {version} ' \
               '--username {username} ' \
               '--password {password} ' \
@@ -78,12 +81,14 @@ class SaltApi(object):
         self.result['version'] = version
         self.result['username'] = username
         self.result['result'] = json.loads(response.text)['return']
+        print(response.text)
         return self.result
 
     def command(self, cmd):
         pass
 
     def testping(self, tgtlist, fun='test.ping', arg=None):
+        '''判断主机是否存活'''
         response = self.post(
             url=self.url,
             data=self.datainfo(
@@ -98,11 +103,11 @@ class SaltApi(object):
 
         return self.result
 
-    def getjid(self, tgtlist):
-        url = "%s/jobs/%s" % (self.url, self.testping(tgtlist))
-
-        print(get(url, headers=self.login).text)
-
-    def get_minion(self, minion):
-        if minion or minion != '*':
-            url = '%s/minion/%s'
+    # def getjid(self, tgtlist):
+    #     url = "%s/jobs/%s".format(self.url, self.testping(tgtlist))
+    #
+    #     print(get(url, headers=self.login).text)
+    #
+    # def get_minion(self, minion):
+    #     if minion or minion != '*':
+    #         url = '%s/minion/%s'

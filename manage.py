@@ -4,12 +4,13 @@
 # date: 2016/10/11
 
 
-from flask_script import Manager
-from app import create_app, db
-from app.models import User, Host, Group
-
 import datetime
 import os
+
+from flask_script import Manager
+
+from app import create_app, db
+from app.models import User, Host, Group
 
 app = create_app(os.environ.get('FLASK_ENV') or 'dev')
 manager = Manager(app)
@@ -42,9 +43,7 @@ def createdb():
 
     fabu = Host('JSSH2WEB16027', '预发布')
     other = Host('JSSH2WEB16026', '其他')
-    db.session.add(fabu)
-    db.session.add(other)
-
+    db.session.add_all([fabu, other])
     db.session.commit()
 
 
@@ -61,7 +60,4 @@ def initadmin():
 
 
 if __name__ == '__main__':
-    # salt = SaltApi(app.config['SALT_URL'], app.config['SALT_USER'], app.config['SALT_PASS'])
-
-    # salt.login
     manager.run()

@@ -6,6 +6,7 @@
 
 
 class Config:
+    '''公共配置'''
 
     SECRET_KEY = '123'
     SQLALCHEMY_TRACK_MODIFICATIONS = False

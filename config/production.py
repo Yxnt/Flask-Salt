@@ -7,8 +7,24 @@ from . import Config
 
 
 class Production(Config):
+    '''线上配置文件'''
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://salt:123456@localhost/salt?charset=utf8'
-    SALT_URL = 'http://172.31.32.5:1122'
-    SALT_USER = 'salt'
-    SALT_PASS = 'salt'
+
+    # DB Config
+    DBUSER = None
+    DBPASS = None
+    DBHOST = None
+    DNNAME = None
+
+    # DB String
+    SQLALCHEMY_DATABASE_URI = ('mysql+pymysql://{dbuser}:{dbpass}@{dbhost}/{dbname}?charset=utf8'.format(
+        dbuser=DBUSER,
+        dbpass=DBPASS,
+        dbhost=DBHOST,
+        dbname=DBHOST
+    ))
+
+    # SaltAPI
+    SALT_URL = ''
+    SALT_USER = ''
+    SALT_PASS = ''

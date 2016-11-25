@@ -20,9 +20,11 @@ def login_form():
     return users.LoginForm()
 
 
+global nextpage
+
+
 @user.route('/login')
 def login():
-    global nextpage
     nextpage = request.args.get('next')
     return render_template('user/login.html',
                            title="登陆",
@@ -50,6 +52,9 @@ def auth():
         if user_name is not None and user_pass:
             login_user(user_name, login_form().rember.data)
             # 登陆成功后跳转到之前的页面或者跳转到首页
-            return redirect(nextpage or url_for('dashboard.index'))
+            try:
+                return redirect(nextpage or url_for('dashboard.index'))
+            except NameError:
+                return redirect(url_for('dashboard.index'))
     flash("账号或密码错误", category='error')
     return redirect(request.referrer)

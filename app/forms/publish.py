@@ -8,7 +8,8 @@ from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired
 
 
-class push(FlaskForm):
+class Push(FlaskForm):
+    '''发布页面FORM组件'''
     path = TextAreaField("路径", validators=[DataRequired()])
     version = StringField('版本号',validators=[DataRequired()])
     username = StringField("用户名", validators=[DataRequired()])

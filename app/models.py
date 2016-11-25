@@ -10,6 +10,7 @@ from app import db, login_manager
 
 
 class User(UserMixin, db.Model):
+    '''用户表'''
     __tablename__ = "salt_user"
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_name = db.Column(db.VARCHAR(6), nullable=False, unique=True)
@@ -36,23 +37,23 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.user_pass, password)
 
-    def __repr__(self):
-        return "<User> %s" % self.user_name
-
     def get_id(self):
         return str(self.user_id)
 
 
 class Group(db.Model):
+    '''主机组表'''
     __tablename__ = "salt_group"
     group_id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     group_name = db.Column(db.VARCHAR(10), unique=True, nullable=False)
+    host_name = db.relationship("Host", backref="salt_host", lazy="dynamic")
 
     def __init__(self, groupname):
         self.group_name = groupname
 
 
 class Host(db.Model):
+    '''主机表'''
     __tablename__ = 'salt_host'
     host_id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
     host_name = db.Column(db.VARCHAR(36), unique=True, nullable=False)

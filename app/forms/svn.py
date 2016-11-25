@@ -9,4 +9,5 @@ from wtforms.validators import DataRequired, URL
 
 
 class Svn(FlaskForm):
+    '''SVN权限开通'''
     svnlist = TextAreaField(validators=[DataRequired(), URL()])

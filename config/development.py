@@ -4,8 +4,10 @@
 # date: 2016/10/18
 
 
-from . import Config
 import os
+
+from . import Config
+
 try:
     from app.utils.logger import handler
 except:
@@ -13,14 +15,28 @@ except:
     from app.utils.logger import handler
 
 
-class development(Config):
+class Development(Config):
+    '''本地调试配置'''
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://salt:123456@localhost/salt?charset=utf8'
-    SALT_URL = 'http://10.1.5.253:8080'
-    SALT_USER = 'salt'
-    SALT_PASS = '1234'
 
+    # DB Config
+    DBUSER = ""
+    DBPASS = ""
+    DBHOST = ""
+    DNNAME = ""
+
+    # DB String
+    SQLALCHEMY_DATABASE_URI = ('mysql+pymysql://{dbuser}:{dbpass}@{dbhost}/{dbname}?charset=utf8'.format(
+        dbuser=DBUSER,
+        dbpass=DBPASS,
+        dbhost=DBHOST,
+        dbname=DNNAME
+    ))
+
+    # SaltAPI
+    SALT_URL = ''
+    SALT_USER = ''
+    SALT_PASS = ''
 
     def init_app(app):
-
         app.logger.addHandler(handler)

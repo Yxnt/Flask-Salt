@@ -18,7 +18,7 @@ csrf = CsrfProtect()
 db = SQLAlchemy()
 
 config = {
-    'dev': development.development,
+    'dev': development.Development,
     'pro': production.Production,
 }
 
@@ -26,6 +26,7 @@ app = Flask(__name__)
 
 
 def create_app(config_name):
+    '''初始化 应用'''
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
     login_manager.session_protection = "strong"
