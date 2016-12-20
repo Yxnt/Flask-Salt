@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block css %}
+    {{ super() }}
+    {#    <link rel="stylesheet" href="{{ url_for('static',filename='css/lib/datatables/jquery.datatables.css') }}">#}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/lib/datatables/datatables.bootstrap.css') }}">
+
+
+{% endblock %}
+
+{% block body_content %}
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">发布记录</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <table id="datatable" class="table table-bordered table-striped" style="table-layout: fixed;">
+                <thead>
+                <tr>
+                    <th>时间</th>
+                    <th>项目</th>
+                    <th>版本号</th>
+                    <th>操作人</th>
+                    <th>提交信息</th>
+                    <th>操作文件</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for log in loglist %}
+                    {% set time = log.operator_time %}
+                    {% set project = log.project_name %}
+                    {% set version = log.project_version %}
+                    {% set user = log.operator_user %}
+                    {% set message = log.operator_message %}
+                    {% set path = log.operator_path %}
+                    <tr>
+                        <td>{{ time }}</td>
+                        <td>{{ project }}</td>
+                        <td>{{ version }}</td>
+                        <td>{{ user }}</td>
+                        <td>{{ message }}</td>
+                        <td>
+                            {% for line in path.split(',') %}
+                                <p style="margin-bottom: 1px;">{{ line }}</p>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static',filename='js/lib/datatables/jquery.datatables.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/lib/datatables/datatables.bootstrap.js') }}"></script>
+
+{% endblock %}
+{% block script %}
+    <script>
+        $(function () {
+            $("#datatable").DataTable({
+                        "lengthMenu": [[15, 25, 50, 100, -1], [15, 25, 50, 100, "ALL"]],
+                        "bSort": false
+                    }
+            );
+        });
+    </script>
+{% endblock %}

@@ -8,11 +8,11 @@ import os
 
 from . import Config
 
-try:
-    from app.utils.logger import handler
-except:
-    os.mkdir('log')
-    from app.utils.logger import handler
+# try:
+#     from app.utils.logger import handler
+# except:
+#     os.mkdir('log')
+#     from app.utils.logger import handler
 
 
 class Development(Config):
@@ -39,4 +39,5 @@ class Development(Config):
     SALT_PASS = ''
 
     def init_app(app):
-        app.logger.addHandler(handler)
+        pass
+        # app.logger.addHandler(handler)

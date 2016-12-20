@@ -1,0 +1,6 @@
+/__pycache__
+/.idea
+/log
+/venv
+*.pyc
+/app/static/.webassets-cache

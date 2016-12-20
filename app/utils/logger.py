@@ -10,7 +10,7 @@ from logging.handlers import RotatingFileHandler
 
 
 nowdate = datetime.datetime.now().strftime('%Y-%m-%d')
-LOG_PATH_FILE = 'log/%s.log'.format(nowdate)
+LOG_PATH_FILE = 'log/{time}.log'.format(time=nowdate)
 LOG_MODE = 'a'
 LOG_MAX_SIZE = 50 * 1024 * 1024
 LOG_MAX_FILES = 4
@@ -26,9 +26,9 @@ handler = RotatingFileHandler(
     encoding='utf-8'
 )
 
-formatter = logging.Formatter(LOG_FORMAT)
-handler.setFormatter(formatter)
-handler.setLevel(LOG_LEVEL)
+# formatter = logging.Formatter(LOG_FORMAT)
+# handler.setFormatter(formatter)
+# handler.setLevel(LOG_LEVEL)
 
 
 

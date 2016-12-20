@@ -8,7 +8,7 @@ import json
 import os
 from collections import OrderedDict
 
-from requests import session, get
+from requests import session
 
 from app import config
 
@@ -43,7 +43,7 @@ class SaltApi(object):
     @property
     def login(self):
         '''登陆saltapi'''
-        login_url = "{domain}/login".format(domain=self.url)
+        login_url = "{domain}/login" (domain=self.url)
         logininfo = {
             'username': self.user,
             'password': self.passwd,
@@ -111,3 +111,5 @@ class SaltApi(object):
     # def get_minion(self, minion):
     #     if minion or minion != '*':
     #         url = '%s/minion/%s'
+
+
