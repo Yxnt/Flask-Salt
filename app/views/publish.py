@@ -9,10 +9,11 @@ from json import dumps
 
 from flask import Blueprint, render_template, request, flash
 from flask_login import login_required
-from sqlalchemy import  or_
+from sqlalchemy import or_
 
-from app import db
+
 from app.utils.salt import SaltApi
+from app import db
 from ..forms.publish import Push
 from ..models import Group
 from ..models import Host
@@ -76,11 +77,14 @@ def index():
         else:
             flash("请选择组或者主机", category="warning")
 
-        project_name = path.split('\\')[2]
-        path = path.replace(' ', ',')
-        log = PublishLog(operator_time, project_name, version, username, message, path)
-        db.session.add(log)
-        db.session.commit()
+        try:
+            project_name = path.split('\\')[2]
+            path = path.replace(' ', ',')
+            log = PublishLog(operator_time, project_name, version, username, message, path)
+            db.session.add(log)
+            db.session.commit()
+        except IndexError:
+            flash("请输入正确的路径", category="error")
 
     return render_template('publish/index.html',
                            grouplist=grouplist,
@@ -98,13 +102,10 @@ def push_log():
     today = today.strftime('%Y-%m-%d')
 
     rule = or_(
-            PublishLog.operator_time.like('%{day}%'.format(day=yesterday)),
-            PublishLog.operator_time.like('%{day}%'.format(day=today))
-        )
+        PublishLog.operator_time.like('%{day}%'.format(day=yesterday)),
+        PublishLog.operator_time.like('%{day}%'.format(day=today))
+    )
 
     log = PublishLog.query.order_by(PublishLog.id.desc()).filter(rule).all()
 
-
-
-
-    return render_template('publish/log.html', title='SVN发布记录', loglist = log)
+    return render_template('publish/log.html', title='SVN发布记录', loglist=log)

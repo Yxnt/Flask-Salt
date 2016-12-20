@@ -43,7 +43,7 @@ class SaltApi(object):
     @property
     def login(self):
         '''登陆saltapi'''
-        login_url = "{domain}/login" (domain=self.url)
+        login_url = "{domain}/login".format(domain=self.url)
         logininfo = {
             'username': self.user,
             'password': self.passwd,
