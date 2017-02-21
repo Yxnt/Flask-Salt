@@ -3,13 +3,10 @@
 # __author__: Yxn
 # date: 2016/10/17
 
-from flask import Blueprint, render_template
+from flask import render_template
 from flask_login import login_required
 
-
-dashboard = Blueprint('dashboard',
-                      __name__,
-                      url_prefix='/dashboard')
+from . import dashboard
 
 
 @dashboard.route('/')

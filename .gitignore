@@ -4,3 +4,4 @@
 /venv
 *.pyc
 /app/static/.webassets-cache
+app/static/css/common.css

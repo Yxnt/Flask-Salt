@@ -3,27 +3,17 @@
 # __author__: Yxn
 # date: 2016/10/18
 
-
-import os
-
 from . import Config
-
-# try:
-#     from app.utils.logger import handler
-# except:
-#     os.mkdir('log')
-#     from app.utils.logger import handler
 
 
 class Development(Config):
     '''本地调试配置'''
     DEBUG = True
-
     # DB Config
-    DBUSER = ""
-    DBPASS = ""
-    DBHOST = ""
-    DNNAME = ""
+    DBUSER = "salt"
+    DBPASS = "MxvYjbOOYbUso"
+    DBHOST = "10.19.80.15"
+    DNNAME = "salt"
 
     # DB String
     SQLALCHEMY_DATABASE_URI = ('mysql+pymysql://{dbuser}:{dbpass}@{dbhost}/{dbname}?charset=utf8'.format(
@@ -40,4 +30,3 @@ class Development(Config):
 
     def init_app(app):
         pass
-        # app.logger.addHandler(handler)

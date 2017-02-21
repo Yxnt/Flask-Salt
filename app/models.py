@@ -37,9 +37,6 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.user_pass, password)
 
-    def __repr__(self):
-        return "<User> %s".format(self.user_name)
-
     def get_id(self):
         return str(self.user_id)
 
@@ -69,24 +66,6 @@ class Host(db.Model):
         self.host_name = hostname
         self.host_group = groupname
 
-
-class PublishLog(db.Model):
-    __tablename__ = 'salt_publish_log'
-    id = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
-    operator_time = db.Column(db.TIMESTAMP(), nullable=False)
-    project_name = db.Column(db.NVARCHAR(30), nullable=False)
-    project_version = db.Column(db.INTEGER, nullable=False)
-    operator_user = db.Column(db.NVARCHAR(20), nullable=False)
-    operator_message = db.Column(db.NVARCHAR(500), nullable=False)
-    operator_path = db.Column(db.NVARCHAR(1000), nullable=False)
-
-    def __init__(self, time, project, version, user, message, path):
-        self.operator_time = time
-        self.project_name = project
-        self.project_version = version
-        self.operator_user = user
-        self.operator_path = path
-        self.operator_message = message
 
 
 @login_manager.user_loader

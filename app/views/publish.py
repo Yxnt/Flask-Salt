@@ -17,7 +17,7 @@ from app import db
 from ..forms.publish import Push
 from ..models import Group
 from ..models import Host
-from ..models import PublishLog
+
 
 publish = Blueprint('publish',
                     __name__,
@@ -92,20 +92,3 @@ def index():
                            form=form,
                            title="项目发布"
                            )
-
-
-@publish.route('/log', methods=['GET'])
-@login_required
-def push_log():
-    today = datetime.today()
-    yesterday = (today + timedelta(-1)).strftime('%Y-%m-%d')
-    today = today.strftime('%Y-%m-%d')
-
-    rule = or_(
-        PublishLog.operator_time.like('%{day}%'.format(day=yesterday)),
-        PublishLog.operator_time.like('%{day}%'.format(day=today))
-    )
-
-    log = PublishLog.query.order_by(PublishLog.id.desc()).filter(rule).all()
-
-    return render_template('publish/log.html', title='SVN发布记录', loglist=log)

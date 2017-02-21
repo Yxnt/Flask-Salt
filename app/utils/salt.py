@@ -56,34 +56,6 @@ class SaltApi(object):
         }
         return data
 
-    def svnupdate(self, tgtlist, version, path, username, password, fun='cmd.run'):
-        '''svn更新函数，'''
-        cmd = 'svn update -r {version} ' \
-              '--username {username} ' \
-              '--password {password} ' \
-              '--accept tc {path}'.format(
-            version=version,
-            username=username,
-            password=password,
-            path=path
-        )
-        response = self.post(
-            url=self.url,
-            headers=self.login,
-            data=self.datainfo(
-                tgtlist=tgtlist,
-                fun=fun,
-                arg=cmd
-            )
-        )
-        self.result['operator'] = 'svn update'
-        self.result['path'] = path
-        self.result['version'] = version
-        self.result['username'] = username
-        self.result['result'] = json.loads(response.text)['return']
-        print(response.text)
-        return self.result
-
     def command(self, cmd):
         pass
 
@@ -111,5 +83,3 @@ class SaltApi(object):
     # def get_minion(self, minion):
     #     if minion or minion != '*':
     #         url = '%s/minion/%s'
-
-
