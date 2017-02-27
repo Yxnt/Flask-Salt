@@ -4,7 +4,7 @@
 # date: 2016/10/13
 
 
-from flask import render_template
+from flask import render_template, session
 from flask import redirect, url_for
 from flask_login import logout_user, login_required
 
@@ -24,4 +24,5 @@ def login():
 @login_required
 def logout():
     logout_user()
+    session.pop('username', None)
     return redirect(url_for('users.login'))

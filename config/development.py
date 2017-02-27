@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # __author__: Yxn
 # date: 2016/10/18
+from datetime import timedelta
 
 from . import Config
 
@@ -9,6 +10,8 @@ from . import Config
 class Development(Config):
     '''本地调试配置'''
     DEBUG = True
+    # login cookie expirse
+    REMEMBER_COOKIE_DURATION = timedelta(hours=2)
     # DB Config
     DBUSER = "salt"
     DBPASS = "MxvYjbOOYbUso"
@@ -24,9 +27,16 @@ class Development(Config):
     ))
 
     # SaltAPI
-    SALT_URL = ''
-    SALT_USER = ''
-    SALT_PASS = ''
+    SALT_URL = 'http://10.19.80.12:8000'
+    SALT_USER = 'salt'
+    SALT_PASS = '123'
+    SALT_EAUTH = 'pam'
+
+    # redis
+    REDIS_IP = '10.19.80.12'
+    REDIS_PORT = '6379'
+    REDIS_DB = '1'
+    REDIS_PASS = 'Gmtj6KQjLmL1Q'
 
     def init_app(app):
         pass

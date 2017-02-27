@@ -13,7 +13,6 @@ from config import development, production
 from .utils import assets
 from .utils.assets import bundles
 
-
 login_manager = LoginManager()
 csrf = CSRFProtect()
 db = SQLAlchemy()
@@ -25,13 +24,14 @@ config = {
 
 app = Flask(__name__)
 
+
 def create_app(config_name):
     '''初始化 应用'''
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
     login_manager.session_protection = "strong"
-    login_manager.login_view = 'users.login' # 未认证用户跳转
+    login_manager.login_view = 'users.login'  # 未认证用户跳转
 
     db.init_app(app)
     login_manager.init_app(app)

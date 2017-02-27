@@ -8,7 +8,7 @@
 class Config:
     '''公共配置'''
 
-    SECRET_KEY = '123'
+    SECRET_KEY = 'fwaefafwafwafe'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod

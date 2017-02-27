@@ -6,14 +6,20 @@
 
 import json
 import os
-from collections import OrderedDict
-
 from requests import session
+import urllib.parse as urljoin
 
 from app import config
+from app.utils.cache import redis_cli
 
 # 读取配置文件
 config = config[os.environ.get('FLASK_ENV') or 'dev']
+r = redis_cli(
+    ip=config.REDIS_IP,
+    port=config.REDIS_PORT,
+    db=config.REDIS_DB,
+    password=config.REDIS_PASS
+)
 
 
 class SaltApi(object):
@@ -22,64 +28,77 @@ class SaltApi(object):
     url = config.SALT_URL
     user = config.SALT_USER
     passwd = config.SALT_PASS
-    result = OrderedDict()  # 结果返回为一个有序字典
+    eauth = config.SALT_EAUTH
 
-    @staticmethod
-    def post(url, data, headers):
-        response = session().post(url, data=data, headers=headers)
-        return response
+    def __init__(self):
+        self.auth = {}
 
-    @staticmethod
-    def datainfo(tgtlist, fun, arg):
-        datainfo = {
-            'client': 'local',
-            'tgt': tgtlist,
-            'expr_form': 'list',  # 操作多个主机
-            'fun': fun,
-            'arg': arg
+    def req(self, path, info):
+        urlpath = urljoin.urljoin(self.url, path)
+
+        headers = {
+            'Accept': 'application/json',
+            'Content-type': 'application/json'
         }
-        return datainfo
+
+        s = session()
+        info = json.dumps(info)
+        ret = s.post(urlpath, info, headers=headers)
+        return ret
+
+    def req_get(self, path):
+        redis_key = 'salt:user:{user}:login'.format(user=self.user)
+        urlpath = urljoin.urljoin(self.url, path)
+        headers = {
+            'Accept': 'application/json',
+            'Content-type': 'application/json'
+        }
+        token = json.loads(r.get(redis_key).decode('utf-8'))
+
+        headers['X-Auth-Token'] = token['X-Auth-Token']
+
+        s = session()
+        ret = s.get(urlpath, headers=headers)
+        return ret
+
 
     @property
     def login(self):
-        '''登陆saltapi'''
-        login_url = "{domain}/login".format(domain=self.url)
-        logininfo = {
-            'username': self.user,
-            'password': self.passwd,
-            'eauth': 'pam'
-        }
-        response = self.post(login_url, data=logininfo, headers=self.headers)
-        token = json.loads(response.text)['return'][0]['token']
-        data = {
-            'X-Auth-Token': token
-        }
-        return data
+        redis_key = 'salt:user:{user}:login'.format(user=self.user)
+        if r.get(redis_key):
+            self.auth = r.get(redis_key)
+            return self.auth
+        else:
+            login_info = {
+                'username': self.user,
+                'password': self.passwd,
+                'eauth': self.eauth
+            }
+            ret_info = self.req('/login', login_info).json()['return'][0]
+            start_time = ret_info['start']
+            end_time = ret_info['expire']
+            expire_time = int(end_time - start_time)
+            token = ret_info['token']
+            self.auth['X-Auth-Token'] = token
+            r.set(redis_key, json.dumps(self.auth), expire_time)
+            return self.auth
 
-    def command(self, cmd):
-        pass
+    @property
+    def stats(self):
+        ret_info = self.req_get('/stats').json()
+        return ret_info
 
-    def testping(self, tgtlist, fun='test.ping', arg=None):
-        '''判断主机是否存活'''
-        response = self.post(
-            url=self.url,
-            data=self.datainfo(
-                tgtlist,
-                fun,
-                arg
-            ), headers=self.login)
+    @property
+    def jobs(self):
+        ret_info = self.req_get('/jobs').json( )
+        return ret_info
 
-        self.result['operator'] = fun
-        self.result['arg'] = arg
-        self.result['result'] = json.loads(response.text)['return'][0]
+    @property
+    def minion(self):
+        ret_info = self.req_get('/minions').json()
+        return ret_info
 
-        return self.result
-
-    # def getjid(self, tgtlist):
-    #     url = "%s/jobs/%s".format(self.url, self.testping(tgtlist))
-    #
-    #     print(get(url, headers=self.login).text)
-    #
-    # def get_minion(self, minion):
-    #     if minion or minion != '*':
-    #         url = '%s/minion/%s'
+    @property
+    def keys(self):
+        ret_info = self.req_get('/keys').json()
+        return ret_info
