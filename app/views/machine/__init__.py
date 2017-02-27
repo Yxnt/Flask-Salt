@@ -2,8 +2,6 @@
 # -*- coding:utf-8 -*-
 from  flask import Blueprint
 
-user = Blueprint('user', __name__,
-                 url_prefix='/user',
-                 )
+machine = Blueprint('machine', __name__)
 
 from . import views

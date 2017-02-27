@@ -13,10 +13,10 @@ class Development(Config):
     # login cookie expirse
     REMEMBER_COOKIE_DURATION = timedelta(hours=2)
     # DB Config
-    DBUSER = "salt"
-    DBPASS = "MxvYjbOOYbUso"
-    DBHOST = "10.19.80.15"
-    DNNAME = "salt"
+    DBUSER = ""
+    DBPASS = ""
+    DBHOST = ""
+    DNNAME = ""
 
     # DB String
     SQLALCHEMY_DATABASE_URI = ('mysql+pymysql://{dbuser}:{dbpass}@{dbhost}/{dbname}?charset=utf8'.format(
@@ -27,16 +27,16 @@ class Development(Config):
     ))
 
     # SaltAPI
-    SALT_URL = 'http://10.19.80.12:8000'
-    SALT_USER = 'salt'
-    SALT_PASS = '123'
-    SALT_EAUTH = 'pam'
+    SALT_URL = ''
+    SALT_USER = ''
+    SALT_PASS = ''
+    SALT_EAUTH = ''
 
     # redis
-    REDIS_IP = '10.19.80.12'
-    REDIS_PORT = '6379'
-    REDIS_DB = '1'
-    REDIS_PASS = 'Gmtj6KQjLmL1Q'
+    REDIS_IP = ''
+    REDIS_PORT = ''
+    REDIS_DB = ''
+    REDIS_PASS = ''
 
     def init_app(app):
         pass

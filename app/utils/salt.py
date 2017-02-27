@@ -90,7 +90,7 @@ class SaltApi(object):
 
     @property
     def jobs(self):
-        ret_info = self.req_get('/jobs').json( )
+        ret_info = self.req_get('/jobs').json()
         return ret_info
 
     @property

@@ -52,8 +52,8 @@ def check(fun):
 def stats():
     for k, v in s.stats.items():
         m = re.match(r"CherryPy HTTPServer.*", k)
-    if m:
-        return s.stats[m.group(0)]
+        if m:
+            return s.stats[m.group(0)]
 
 
 

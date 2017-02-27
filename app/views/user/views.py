@@ -14,7 +14,6 @@ from . import user
 
 @user.route('/login')
 def login():
-
     return render_template('user/views.html',
                            title="登陆",
                            login_form=LoginForm())

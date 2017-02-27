@@ -42,8 +42,11 @@ def create_app(config_name):
     from app.views import user
     from app.views import dashboard
     from app.views import api
+    from app.views import machine
+
     app.register_blueprint(user)
     app.register_blueprint(dashboard)
     app.register_blueprint(api)
+    app.register_blueprint(machine)
 
     return app

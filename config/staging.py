@@ -5,7 +5,6 @@
 
 
 DEBUG =True
-SECRET_KEY = '123'
+SECRET_KEY = 'machine'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://salt:123456@10.1.3.253/salt?charset=utf8'
