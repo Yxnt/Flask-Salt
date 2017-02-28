@@ -24,4 +24,4 @@ def login():
 def logout():
     logout_user()
     session.pop('username', None)
-    return redirect(url_for('users.login'))
+    return redirect(url_for('user.login'))

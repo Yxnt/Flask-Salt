@@ -38,8 +38,10 @@ def auth():
 
 def check(fun):
     @wraps(fun)
-    def user():
-        if 'username' in session:
+    def user(operator=None):
+        if 'username' in session and operator:
+            return jsonify(fun(operator))
+        elif 'username' in session:
             return jsonify(fun())
         else:
             abort(401)
@@ -56,19 +58,27 @@ def stats():
             return s.stats[m.group(0)]
 
 
-
 @api.route('/salt/jobs')
 @check
 def job():
     return s.jobs
+
 
 @api.route('/salt/minions')
 @check
 def minion():
     return s.minion
 
+
 @api.route('/salt/keys')
 @check
 def keys():
     return s.keys
 
+
+@api.route('/salt/publish/git/<operator>', methods=['GET','POST'])
+@check
+def git(operator):
+    post_info = request.get_json()
+    data = s.run(fun='gitinfo.%s' % operator, arg=post_info['project_name'])
+    return data

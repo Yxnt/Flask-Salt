@@ -31,7 +31,7 @@ def create_app(config_name):
     config[config_name].init_app(app)
 
     login_manager.session_protection = "strong"
-    login_manager.login_view = 'users.login'  # 未认证用户跳转
+    login_manager.login_view = 'user.login'  # 未认证用户跳转
 
     db.init_app(app)
     login_manager.init_app(app)
@@ -43,10 +43,12 @@ def create_app(config_name):
     from app.views import dashboard
     from app.views import api
     from app.views import machine
+    from app.views import publish
 
     app.register_blueprint(user)
     app.register_blueprint(dashboard)
     app.register_blueprint(api)
     app.register_blueprint(machine)
+    app.register_blueprint(publish)
 
     return app

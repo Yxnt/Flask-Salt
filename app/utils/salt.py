@@ -29,17 +29,21 @@ class SaltApi(object):
     user = config.SALT_USER
     passwd = config.SALT_PASS
     eauth = config.SALT_EAUTH
+    redis_key = 'salt:user:{user}:login'.format(user=user)
 
     def __init__(self):
         self.auth = {}
 
     def req(self, path, info):
         urlpath = urljoin.urljoin(self.url, path)
-
         headers = {
             'Accept': 'application/json',
             'Content-type': 'application/json'
         }
+
+        token = json.loads(r.get(self.redis_key).decode('utf-8'))
+
+        headers['X-Auth-Token'] = token['X-Auth-Token']
 
         s = session()
         info = json.dumps(info)
@@ -47,13 +51,13 @@ class SaltApi(object):
         return ret
 
     def req_get(self, path):
-        redis_key = 'salt:user:{user}:login'.format(user=self.user)
+
         urlpath = urljoin.urljoin(self.url, path)
         headers = {
             'Accept': 'application/json',
             'Content-type': 'application/json'
         }
-        token = json.loads(r.get(redis_key).decode('utf-8'))
+        token = json.loads(r.get(self.redis_key).decode('utf-8'))
 
         headers['X-Auth-Token'] = token['X-Auth-Token']
 
@@ -101,4 +105,17 @@ class SaltApi(object):
     @property
     def keys(self):
         ret_info = self.req_get('/keys').json()
+        return ret_info
+
+    def run(self, fun, arg):
+        data_info = [{
+            "client": "local",
+            "tgt":'master',
+            "fun": fun
+        }]
+
+        if arg:
+            data_info[0]['arg'] = arg
+
+        ret_info = self.req('', data_info).json()
         return ret_info

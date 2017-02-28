@@ -9,9 +9,9 @@ $(function () {
 });
 
 
-setInterval("saltapi_stats()", "36000");
-setInterval("saltapi_jobs()", "5000");
-setInterval("saltapi_minions()", "10000");
+setInterval("saltapi_stats()", "360000");
+setInterval("saltapi_jobs()", "60000");
+setInterval("saltapi_minions()", "100000");
 
 
 function saltapi_stats() {
@@ -28,7 +28,7 @@ function saltapi_jobs() {
 }
 function saltapi_minions() {
     $.getJSON('/salt/minions', function (json) {
-        var minion = json["return"].length - 1;
+        var minion = Object.keys(json['return']['0']).length;
         $("#client").text(minion)
     })
 }

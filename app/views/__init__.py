@@ -7,3 +7,4 @@ from .api import api
 from .dashboard import dashboard
 from .user import user
 from .machine import machine
+from .publish import publish
