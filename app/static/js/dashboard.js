@@ -21,9 +21,9 @@ function saltapi_stats() {
     });
 }
 function saltapi_jobs() {
-    $.getJSON('/salt/jobs', function (json) {
-        var jobs = json["return"].length - 1;
-        $("#jobs").text(jobs)
+    $.getJSON('/salt/jobs', function (data) {
+        var length = Object.keys(data["return"]['0']).length ;
+        $("#jobs").text(length)
     })
 }
 function saltapi_minions() {

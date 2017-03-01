@@ -46,11 +46,11 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <form role="form">
+            <form id='publish_form' role="form">
                 <!-- select -->
                 <div class="form-group">
                     <label for="project_name">项目名称</label>
-                    <input class="form-control" type="text" id="project_name">
+                    <input class="form-control" type="text" id="project_name" name="project">
                 </div>
                 {#                <div class="form-group">#}
                 {#                    <label for="branches">分支名称</label> <i class="fa fa-refresh" onclick="get_project_info()"></i>#}
@@ -58,22 +58,61 @@
                 {#                    </select>#}
                 {#                </div>#}
                 <div class="form-group">
-                    <label for="cur_info">当前版本信息</label> <i class="fa fa-refresh" onclick="get_cur_pro_version()"></i>
-                    <input class="form-control" value="" disabled id="cur_info">
+                    <label for="cur_info">当前版本信息</label> <i id="cur_hex_info" class="fa fa-refresh"></i>
+                    <input class="form-control" value="" id="cur_info" disabled>
                 </div>
                 <div class="form-group">
-                    <label>历史版本信息</label> <i class="fa fa-refresh" onclick="get_cur_pro_all_version()"></i>
+                    <label>历史版本信息</label> <i id="history_refre" class="fa fa-refresh"></i>
                     <select class="form-control" id="all_hex">
                     </select>
                 </div>
                 <!-- Select multiple-->
                 <div class="form-group">
-                    <label>节点名称</label> <i id="host_refre" class="fa fa-refresh" onclick="get_host()"></i>
-                    <select multiple class="form-control" id="clients">
-                    </select>
+                    <label>节点名称</label> <i id="host_refre" class="fa fa-refresh"></i>
+                    <select multiple class="form-control" id="clients"></select>
                 </div>
-                <input class="btn btn-info" id="submit" type="button" value="更新"></input>
-                <button class="btn btn-danger">回滚</button>
+
+
+                <input id="submit" type="button" class="btn btn-primary " data-toggle="modal"
+                       data-target="#update_version" value="更新">
+                <div id="update_version" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4>操作提示</h4>
+                            </div>
+                            <div class="modal-body">
+                            </div>
+                            <div class="modal-footer">
+                                <input id="confirm" type="button" class="btn btn-danger" value="确认">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input id="reset" type="submit" class="btn btn-danger " data-toggle="modal"
+                        data-target="#update_version" value="回滚">
+                <div id="" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4>操作提示</h4>
+                            </div>
+                            <div class="modal-body">
+                            </div>
+                            <div class="modal-footer">
+                                <input id="confirm" type="button" class="btn btn-default" value="确认">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </form>
         </div>
         <!-- /.box-body -->

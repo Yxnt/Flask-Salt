@@ -29,7 +29,8 @@ def auth():
         else:
             login_user(user_name)
         session['username'] = request.form['username']
-        s.login
+        if not s.r.get(s.redis_key):
+            s.login()
         return redirect(url_for('dashboard.index'))
     else:
         flash("账号或密码错误", category='error')
@@ -80,5 +81,8 @@ def keys():
 @check
 def git(operator):
     post_info = request.get_json()
-    data = s.run(fun='gitinfo.%s' % operator, arg=post_info['project_name'])
+    if len(post_info) !=4:
+        data = s.run(fun='gitinfo.%s' % operator, arg=post_info,tgt='master')
+    else:
+        data = s.run(fun='gitinfo.%s' % operator, arg=post_info[1:],tgt=post_info[0])
     return data

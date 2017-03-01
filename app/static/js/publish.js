@@ -2,6 +2,18 @@
  * Created by yandou on 2017/2/28.
  */
 $(function () {
+    $("#publish_form").validate({
+        rules: {
+            project: {
+                required: true
+            }
+        },
+        messages: {
+            project: {
+                required: "缺少项目名称"
+            }
+        }
+    });
     get_host();
     var csrftoken = $('meta[name=csrf-token]').attr('content');
     $.ajaxSetup({
@@ -12,13 +24,47 @@ $(function () {
         }
     });
 
+    $("#submit").click(function () {
+        var project_name = $("#project_name").val();
+        var cur_hex = $("#cur_info").val();
+        var new_hex = $("#all_hex").val();
+        var master = "master";
+        var client = $("#clients").val();
+        var html = "";
+        html = html.concat("项目：", project_name, '<br>',
+            "当前版本号：", "<strong>", cur_hex, "</strong>", "<br>",
+            "更新后版本号：", "<strong>", new_hex, "</strong>", "<br>",
+            "选中节点：", "<strong>", client, "</strong>"
+        );
+        $(".modal-body").html(html);
+        var data = JSON.stringify([master,project_name, new_hex, client]);
+
+        $("#confirm").click(function () {
+            if (project_name === "" ||cur_hex === "" || new_hex === null ) {
+                return alert('提交失败');
+            } else {
+                ajax('/salt/publish/git/reset', 'POST', data, function (data) {
+                    alert("结果请查看发布状态功能页");
+                    $("#update_version").modal('hide');
+                })
+            }
+        });
+    });
+
+    $("#reset").click(function () {
+        alert(2);
+    });
+    $("#cur_hex_info").click(get_cur_pro_version);
+    $("#history_refre").click(get_cur_pro_all_version);
+    $("#host_refre").click(get_host);
+
 });
 
 
+//获取所有客户端节点
 function get_host() {
     $("#host_refre").addClass("fa-spin");
-
-    $.getJSON('/salt/minions', function (data) {
+    ajax('/salt/minions', "GET", undefined, function (data) {
         var info = data['return'][0];
         var length = Object.keys(info).length;
         var html = "";
@@ -28,63 +74,55 @@ function get_host() {
             $("#clients").html(html);
         }
         $("#host_refre").removeClass("fa-spin")
-    })
+
+    });
+}
+// 获取当前hexsha
+function get_cur_pro_version() {
+    $("#cur_hex_info").addClass("fa-spin");
+    var project_name = $("#project_name").val();
+    var data = JSON.stringify([project_name]);
+    ajax('/salt/publish/git/get_master_cur_hex', type = "POST", data, function (data) {
+        $('#cur_info').val(data['return']['0']['master']);
+        $("#cur_hex_info").removeClass("fa-spin");
+        get_cur_pro_all_version();
+    });
+
 }
 
-function get_project_info() {
-    // $("#submit").click(function () {
-
-    $.ajax({
-        url: "/salt/publish/git/get_branches",
-        type: 'POST',
-        contentType: 'application/json',
-        async: true,
-        data: JSON.stringify({
-            project_name: project_name
-        }),
-        success: function (data) {
-            ret = data['return'][0]['master'];
-            ret_length = Object.keys(ret).length;
-            var html = "";
-            for (var i = 0; i < ret_length; i++) {
-                var branches_name = ret[i];
-                html = html.concat("<option id=branches-", i, ">", branches_name, "</option>");
-                $("#branches").html(html);
+//获取所有git hexsha
+function get_cur_pro_all_version() {
+    $("#history_refre").addClass("fa-spin");
+    var project_name = $("#project_name").val();
+    var data = JSON.stringify([project_name]);
+    var cur_hex = $('#cur_info').val();
+    ajax('/salt/publish/git/get_master_all_hex', "POST", data, function (data) {
+        ret = data['return']['0']['master'];
+        ret_length = Object.keys(ret).length;
+        var html = "";
+        for (var i = 0; i < ret_length; i++) {
+            var hex = ret[i];
+            if (hex === cur_hex) {
+                html = html.concat("<option id=version-", i, " style='color:red'>", hex, "</option>");
+                continue
             }
+            html = html.concat("<option id=version-", i, ">", hex, "</option>");
+            $("#all_hex").html(html);
         }
+        $("#history_refre").removeClass("fa-spin");
     });
 }
 
-
-function get_cur_pro_version() {
-    ajax('/salt/publish/git/get_master_cur_hex', function (data) {
-        $('#cur_info').val(data['return']['0']['master']);
-    })
-}
-
-function get_cur_pro_all_version() {
-    ajax('/salt/publish/git/get_master_all_hex', function (data) {
-            ret = data['return']['0']['master'];
-            ret_length = Object.keys(ret).length;
-            var html = "";
-            for (var i = 0; i < ret_length; i++) {
-                var hex = ret[i];
-                html = html.concat("<option id=version-", i, ">", hex, "</option>");
-                $("#all_hex").html(html);
-            }
-        })
-}
-
-function ajax(url, fun) {
-    var project_name = $("#project_name").val();
+function ajax(url, type, data, fun) {
+    if (data !== undefined) {
+        data = data;
+    }
     $.ajax({
             url: url,
-            type: 'POST',
+            type: type,
             contentType: 'application/json',
             async: true,
-            data: JSON.stringify({
-                project_name: project_name
-            }),
+            data: data,
             success: fun
         }
     )

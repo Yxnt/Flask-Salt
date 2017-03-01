@@ -14,12 +14,7 @@ from app.utils.cache import redis_cli
 
 # 读取配置文件
 config = config[os.environ.get('FLASK_ENV') or 'dev']
-r = redis_cli(
-    ip=config.REDIS_IP,
-    port=config.REDIS_PORT,
-    db=config.REDIS_DB,
-    password=config.REDIS_PASS
-)
+
 
 
 class SaltApi(object):
@@ -30,6 +25,12 @@ class SaltApi(object):
     passwd = config.SALT_PASS
     eauth = config.SALT_EAUTH
     redis_key = 'salt:user:{user}:login'.format(user=user)
+    r = redis_cli(
+        ip=config.REDIS_IP,
+        port=config.REDIS_PORT,
+        db=config.REDIS_DB,
+        password=config.REDIS_PASS
+    )
 
     def __init__(self):
         self.auth = {}
@@ -40,10 +41,9 @@ class SaltApi(object):
             'Accept': 'application/json',
             'Content-type': 'application/json'
         }
-
-        token = json.loads(r.get(self.redis_key).decode('utf-8'))
-
-        headers['X-Auth-Token'] = token['X-Auth-Token']
+        if self.r.get(self.redis_key):
+            token = json.loads(self.r.get(self.redis_key).decode('utf-8'))
+            headers['X-Auth-Token'] = token['X-Auth-Token']
 
         s = session()
         info = json.dumps(info)
@@ -57,7 +57,7 @@ class SaltApi(object):
             'Accept': 'application/json',
             'Content-type': 'application/json'
         }
-        token = json.loads(r.get(self.redis_key).decode('utf-8'))
+        token = json.loads(self.r.get(self.redis_key).decode('utf-8'))
 
         headers['X-Auth-Token'] = token['X-Auth-Token']
 
@@ -66,11 +66,11 @@ class SaltApi(object):
         return ret
 
 
-    @property
+
     def login(self):
         redis_key = 'salt:user:{user}:login'.format(user=self.user)
-        if r.get(redis_key):
-            self.auth = r.get(redis_key)
+        if self.r.get(redis_key):
+            self.auth = self.r.get(redis_key)
             return self.auth
         else:
             login_info = {
@@ -79,12 +79,13 @@ class SaltApi(object):
                 'eauth': self.eauth
             }
             ret_info = self.req('/login', login_info).json()['return'][0]
+
             start_time = ret_info['start']
             end_time = ret_info['expire']
             expire_time = int(end_time - start_time)
             token = ret_info['token']
             self.auth['X-Auth-Token'] = token
-            r.set(redis_key, json.dumps(self.auth), expire_time)
+            self.r.set(redis_key, json.dumps(self.auth), expire_time)
             return self.auth
 
     @property
@@ -107,10 +108,10 @@ class SaltApi(object):
         ret_info = self.req_get('/keys').json()
         return ret_info
 
-    def run(self, fun, arg):
+    def run(self, fun, arg, tgt):
         data_info = [{
             "client": "local",
-            "tgt":'master',
+            "tgt":tgt,
             "fun": fun
         }]
 
