@@ -2,6 +2,9 @@
  * Created by yandou on 2017/2/28.
  */
 $(function () {
+
+
+
     $("#publish_form").validate({
         rules: {
             project: {
@@ -23,12 +26,18 @@ $(function () {
             }
         }
     });
+    var project_name = $("#project_name").val();
+    var cur_hex = $("#cur_info").val();
+    var new_hex = $("#all_hex").val();
+    var master = "master";
+    var client = $("#clients").val();
+
+
 
     $("#submit").click(function () {
         var project_name = $("#project_name").val();
         var cur_hex = $("#cur_info").val();
         var new_hex = $("#all_hex").val();
-        var master = "master";
         var client = $("#clients").val();
         var html = "";
         html = html.concat("项目：", project_name, '<br>',
@@ -36,24 +45,50 @@ $(function () {
             "更新后版本号：", "<strong>", new_hex, "</strong>", "<br>",
             "选中节点：", "<strong>", client, "</strong>"
         );
-        $(".modal-body").html(html);
-        var data = JSON.stringify([master,project_name, new_hex, client]);
+        $("#operator").html(html);
+    });
 
-        $("#confirm").click(function () {
+
+    $("#confirm").click(function () {
+        var project_name = $("#project_name").val();
+        var cur_hex = $("#cur_info").val();
+        var new_hex = $("#all_hex").val();
+        var master = "master";
+        var client = $("#clients").val();
+        var data = JSON.stringify([master,project_name, new_hex, client]);
             if (project_name === "" ||cur_hex === "" || new_hex === null ) {
                 return alert('提交失败');
             } else {
+                alert("正在执行，请稍后");
                 ajax('/salt/publish/git/reset', 'POST', data, function (data) {
-                    alert("结果请查看发布状态功能页");
-                    $("#update_version").modal('hide');
+                    var info = data['return'][0]['master'];
+                    $("#result").modal('show');
+                    $("#result_info").text(JSON.stringify(info)).css({
+                        "overflow-y":"auto",
+                        "word-break":"break-all"
+                    });
                 })
             }
         });
+
+    $("#all_close").click(function () {
+       $('.modal').modal('hide');
     });
 
     $("#reset").click(function () {
-        alert(2);
+        var project_name = $("#project_name").val();
+        var cur_hex = $("#cur_info").val();
+        var new_hex = $("#all_hex").val();
+        var client = $("#clients").val();
+        var html = "";
+        html = html.concat("项目：", project_name, '<br>',
+            "当前版本号：", "<strong>", cur_hex, "</strong>", "<br>",
+            "回滚后版本号：", "<strong>", new_hex, "</strong>", "<br>",
+            "选中节点：", "<strong>", client, "</strong>"
+        );
+        $("#operator").html(html);
     });
+
     $("#cur_hex_info").click(get_cur_pro_version);
     $("#history_refre").click(get_cur_pro_all_version);
     $("#host_refre").click(get_host);

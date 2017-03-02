@@ -83,7 +83,7 @@
                                         aria-hidden="true">&times;</span></button>
                                 <h4>操作提示</h4>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" id="operator">
                             </div>
                             <div class="modal-footer">
                                 <input id="confirm" type="button" class="btn btn-danger" value="确认">
@@ -93,25 +93,27 @@
                     </div>
                 </div>
 
-                <input id="reset" type="submit" class="btn btn-danger " data-toggle="modal"
-                        data-target="#update_version" value="回滚">
-                <div id="" class="modal fade" tabindex="-1" role="dialog">
-                    <div class="modal-dialog modal-sm" role="document">
+
+                <div id="result" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                                <h4>操作提示</h4>
+                                <h4 id="myModalLabel">操作结果</h4>
                             </div>
                             <div class="modal-body">
+                                <p id="result_info" class="clearfix"></p>
                             </div>
                             <div class="modal-footer">
-                                <input id="confirm" type="button" class="btn btn-default" value="确认">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal" id="all_close">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <input id="reset" type="button" class="btn btn-danger " data-toggle="modal"
+                       data-target="#update_version" value="回滚">
 
             </form>
         </div>
