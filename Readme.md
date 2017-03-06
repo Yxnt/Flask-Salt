@@ -8,7 +8,15 @@ Flask-Salt
 * 数据库： Mysql 5.7
 
 
+项目截图
 ----
+#### 仪表盘
+![](screen/dashboard.png)
+
+
+#### 发布管理
+![](screen/publish.png)
+
 
 
 提交说明：
@@ -56,3 +64,4 @@ Flask-Salt
 1. 修复获取git hex 的bug
 2. 增加文件判断脚本（diff.py）
 3. 修改gitinfo.py，将文件路径存入redis中，配合diff.py使用
+4. 增加项目图片
