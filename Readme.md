@@ -50,3 +50,9 @@ Flask-Salt
 
 1. BUG修复：重复提交
 2. 待修改复制文件操作
+
+2017/03/06:
+
+1. 修复获取git hex 的bug
+2. 增加文件判断脚本（diff.py）
+3. 修改gitinfo.py，将文件路径存入redis中，配合diff.py使用

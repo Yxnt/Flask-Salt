@@ -77,12 +77,12 @@ def keys():
     return s.keys
 
 
-@api.route('/salt/publish/git/<operator>', methods=['GET','POST'])
+@api.route('/salt/publish/git/<operator>', methods=['GET', 'POST'])
 @check
 def git(operator):
     post_info = request.get_json()
-    if len(post_info) !=4:
-        data = s.run(fun='gitinfo.%s' % operator, arg=post_info,tgt='master')
+    if len(post_info) != 4:
+        data = s.run(fun='gitinfo.%s' % operator, arg=post_info, tgt='master')
     else:
-        data = s.run(fun='gitinfo.%s' % operator, arg=post_info[1:],tgt=post_info[0])
+        data = s.run(fun='gitinfo.%s' % operator, arg=post_info[1:], tgt=post_info[0])
     return data

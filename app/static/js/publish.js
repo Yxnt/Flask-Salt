@@ -4,7 +4,6 @@
 $(function () {
 
 
-
     $("#publish_form").validate({
         rules: {
             project: {
@@ -33,7 +32,6 @@ $(function () {
     var client = $("#clients").val();
 
 
-
     $("#submit").click(function () {
         var project_name = $("#project_name").val();
         var cur_hex = $("#cur_info").val();
@@ -55,24 +53,24 @@ $(function () {
         var new_hex = $("#all_hex").val();
         var master = "master";
         var client = $("#clients").val();
-        var data = JSON.stringify([master,project_name, new_hex, client]);
-            if (project_name === "" ||cur_hex === "" || new_hex === null ) {
-                return alert('提交失败');
-            } else {
-                alert("正在执行，请稍后");
-                ajax('/salt/publish/git/reset', 'POST', data, function (data) {
-                    var info = data['return'][0]['master'];
-                    $("#result").modal('show');
-                    $("#result_info").text(JSON.stringify(info)).css({
-                        "overflow-y":"auto",
-                        "word-break":"break-all"
-                    });
-                })
-            }
-        });
+        var data = JSON.stringify([master, project_name, new_hex, client]);
+        if (project_name === "" || cur_hex === "" || new_hex === null) {
+            return alert('提交失败');
+        } else {
+            alert("正在执行，请稍后");
+            ajax('/salt/publish/git/reset', 'POST', data, function (data) {
+                var info = data['return'][0]['master'];
+                $("#result").modal('show');
+                $("#result_info").text(JSON.stringify(info)).css({
+                    "overflow-y": "auto",
+                    "word-break": "break-all"
+                });
+            })
+        }
+    });
 
     $("#all_close").click(function () {
-       $('.modal').modal('hide');
+        $('.modal').modal('hide');
     });
 
     $("#reset").click(function () {
@@ -131,6 +129,8 @@ function get_cur_pro_all_version() {
     var project_name = $("#project_name").val();
     var data = JSON.stringify([project_name]);
     var cur_hex = $('#cur_info').val();
+
+
     ajax('/salt/publish/git/get_master_all_hex', "POST", data, function (data) {
         ret = data['return']['0']['master'];
         ret_length = Object.keys(ret).length;
@@ -139,7 +139,7 @@ function get_cur_pro_all_version() {
             var hex = ret[i];
             if (hex === cur_hex) {
                 html = html.concat("<option id=version-", i, " style='color:red'>", hex, "</option>");
-                continue
+                continue;
             }
             html = html.concat("<option id=version-", i, ">", hex, "</option>");
             $("#all_hex").html(html);
