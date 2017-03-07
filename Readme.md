@@ -11,11 +11,11 @@ Flask-Salt
 项目截图
 ----
 #### 仪表盘
-![](screen/dashboard.png)
+![dashboard.png](https://ooo.0o0.ooo/2017/03/07/58be3fd7849ba.png)
 
 
 #### 发布管理
-![](screen/publish.png)
+![publish.png](https://ooo.0o0.ooo/2017/03/07/58be3fd5dc848.png)
 
 
 
@@ -65,3 +65,8 @@ Flask-Salt
 2. 增加文件判断脚本（diff.py）
 3. 修改gitinfo.py，将文件路径存入redis中，配合diff.py使用
 4. 增加项目图片
+
+2017/03/07：
+1. 移除项目图片，将地址更改为第三方图床
+2. 修改简单bug
+3. 创建develop分支

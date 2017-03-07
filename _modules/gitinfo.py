@@ -47,12 +47,8 @@ def get_branches(project_name):
 def get_master_all_hex(project_name):
     hexsha_history = list()
     repo = Repo(get_path(project_name))
-    hc = repo.iter_commits('master')
+    hc = repo.iter_commits('origin/master')
     repo.remotes.origin.fetch()
-    remote = repo.remotes.origin.refs.master.log()
-    if remote:
-        for i in remote:
-            hexsha_history.append(i.newhexsha.encode('utf-8'))
     for i in hc:
         hexsha_history.append(i.hexsha.encode('utf-8'))
     return list(set(hexsha_history))
