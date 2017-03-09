@@ -4,11 +4,12 @@
 # date: 2016/10/18
 
 
+from os import environ
 
 class Config:
     '''公共配置'''
 
-    SECRET_KEY = 'fwaefafwafwafe'
+    SECRET_KEY = environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod

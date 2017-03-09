@@ -62,7 +62,7 @@ def diff(src, dst):
         password=''
     )
     r = redis.Redis(connection_pool=pool)
-    filelist = set([i.encode('utf8') for i in json.loads(r.get('salt:publish:salt:save_res'))])
+    filelist = {[i.encode('utf8') for i in json.loads(r.get('salt:publish:salt:save_res'))]}
 
     ret = []
     src_list = set()

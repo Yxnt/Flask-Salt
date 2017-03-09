@@ -10,7 +10,7 @@ from requests import session
 import urllib.parse as urljoin
 
 from app import config
-from app.utils.cache import redis_cli
+from app.utils.cache import RedisCli
 
 # 读取配置文件
 config = config[os.environ.get('FLASK_ENV') or 'dev']
@@ -25,7 +25,7 @@ class SaltApi(object):
     passwd = config.SALT_PASS
     eauth = config.SALT_EAUTH
     redis_key = 'salt:user:{user}:login'.format(user=user)
-    r = redis_cli(
+    r = RedisCli(
         ip=config.REDIS_IP,
         port=config.REDIS_PORT,
         db=config.REDIS_DB,
