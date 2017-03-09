@@ -25,7 +25,7 @@ class SaltApi(object):
     passwd = config.SALT_PASS
     eauth = config.SALT_EAUTH
     redis_key = 'salt:user:{user}:login'.format(user=user)
-    r = RedisCli(
+    redis = RedisCli(
         ip=config.REDIS_IP,
         port=config.REDIS_PORT,
         db=config.REDIS_DB,
@@ -36,6 +36,12 @@ class SaltApi(object):
         self.auth = {}
 
     def req(self, path, info):
+        """
+        POST方式执行salt任务
+        :param path: salt api uri
+        :param info: json info
+        :return: saltstack json info
+        """
         urlpath = urljoin.urljoin(self.url, path)
         headers = {
             'Accept': 'application/json',
@@ -51,7 +57,11 @@ class SaltApi(object):
         return ret
 
     def req_get(self, path):
-
+        """
+        GET方式获取salt信息
+        :param path: salt api uri
+        :return: saltstack json info
+        """
         urlpath = urljoin.urljoin(self.url, path)
         headers = {
             'Accept': 'application/json',
@@ -109,6 +119,13 @@ class SaltApi(object):
         return ret_info
 
     def run(self, fun, arg, tgt):
+        """
+        saltstack runner 
+        :param fun: 要执行的modules
+        :param arg: 提交的参数
+        :param tgt: 操作的host节点
+        :return: 操作结果
+        """
         data_info = [{
             "client": "local",
             "tgt":tgt,

@@ -34,6 +34,7 @@ def get_path(project_name):
 
 
 def get_branches(project_name):
+    """获取当前项目的所有分支"""
     result = {}
     repo = Repo(get_path(project_name))
     refs = repo.remotes.origin.refs
@@ -82,7 +83,7 @@ def reset(project_name, newhex, host):
         cli.cmd(
             host,
             'cp.get_dir',
-            ['salt://file/Release/%s' % project_name, 'D:/ops', 'gzip=5'],
+            ['salt://file/Release/{project_name}'.format(project_name=project_name), 'D:/ops', 'gzip=5'],
             expr_form='list')
         ret = cli.cmd(
             host,

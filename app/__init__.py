@@ -45,8 +45,8 @@ def create_app(config_name):
     from app.views import machine
     from app.views import publish
 
-    app.register_blueprint(user)
-    app.register_blueprint(dashboard)
+    app.register_blueprint(user, url_prefix='/user')
+    app.register_blueprint(dashboard, url_prefix='/dashboard')
     app.register_blueprint(api)
     app.register_blueprint(machine)
     app.register_blueprint(publish)

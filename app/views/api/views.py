@@ -29,7 +29,7 @@ def auth():
         else:
             login_user(user_name)
         session['username'] = request.form['username']
-        if not s.r.get(s.redis_key):
+        if not s.redis.get(s.redis_key):
             s.login()
         return redirect(url_for('dashboard.index'))
     else:
@@ -82,7 +82,7 @@ def keys():
 def git(operator):
     post_info = request.get_json()
     if len(post_info) != 4:
-        data = s.run(fun='gitinfo.%s' % operator, arg=post_info, tgt='master')
+        data = s.run(fun='gitinfo.{fun}'.format(fun=operator), arg=post_info, tgt='master')
     else:
-        data = s.run(fun='gitinfo.%s' % operator, arg=post_info[1:], tgt=post_info[0])
+        data = s.run(fun='gitinfo.{fun}'.format(fun=operator), arg=post_info[1:], tgt=post_info[0])
     return data
