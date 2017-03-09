@@ -46,6 +46,7 @@ def get_branches(project_name):
 
 
 def get_master_all_hex(project_name):
+    """获取远端master的所有提交记录"""
     hexsha_history = list()
     repo = Repo(get_path(project_name))
     hc = repo.iter_commits('origin/master')
@@ -62,6 +63,7 @@ def get_master_cur_hex(project_name):
 
 
 def reset(project_name, newhex, host):
+    """执行更新或者回滚操作"""
     repo = Repo(get_path(project_name))
     result = repo.head.reset(newhex, index=True, working_tree=True).name
 
@@ -88,6 +90,6 @@ def reset(project_name, newhex, host):
         ret = cli.cmd(
             host,
             'diff.diff',
-            ['D:/ops/%s' % project_name, 'E:/Release/%s' % project_name],
+            ['D:/ops/{project_name}'.format(project_name=project_name), 'E:/Release/%s' % project_name],
             expr_form='list')
         return ret
