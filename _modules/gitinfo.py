@@ -90,6 +90,7 @@ def reset(project_name, newhex, host):
         ret = cli.cmd(
             host,
             'diff.diff',
-            ['D:/ops/{project_name}'.format(project_name=project_name), 'E:/Release/%s' % project_name],
+            ['D:/ops/{project_name}'.format(project_name=project_name),
+             'E:/Release/{project_name}'.format(project_name=project_name)],
             expr_form='list')
         return ret
