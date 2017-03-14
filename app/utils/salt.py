@@ -47,8 +47,8 @@ class SaltApi(object):
             'Accept': 'application/json',
             'Content-type': 'application/json'
         }
-        if self.r.get(self.redis_key):
-            token = json.loads(self.r.get(self.redis_key).decode('utf-8'))
+        if self.redis.get(self.redis_key):
+            token = json.loads(self.redis.get(self.redis_key).decode('utf-8'))
             headers['X-Auth-Token'] = token['X-Auth-Token']
 
         s = session()
@@ -67,7 +67,7 @@ class SaltApi(object):
             'Accept': 'application/json',
             'Content-type': 'application/json'
         }
-        token = json.loads(self.r.get(self.redis_key).decode('utf-8'))
+        token = json.loads(self.redis.get(self.redis_key).decode('utf-8'))
 
         headers['X-Auth-Token'] = token['X-Auth-Token']
 
@@ -79,8 +79,8 @@ class SaltApi(object):
 
     def login(self):
         redis_key = 'salt:user:{user}:login'.format(user=self.user)
-        if self.r.get(redis_key):
-            self.auth = self.r.get(redis_key)
+        if self.redis.get(redis_key):
+            self.auth = self.redis.get(redis_key)
             return self.auth
         else:
             login_info = {
@@ -95,7 +95,7 @@ class SaltApi(object):
             expire_time = int(end_time - start_time)
             token = ret_info['token']
             self.auth['X-Auth-Token'] = token
-            self.r.set(redis_key, json.dumps(self.auth), expire_time)
+            self.redis.set(redis_key, json.dumps(self.auth), expire_time)
             return self.auth
 
     @property
