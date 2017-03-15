@@ -65,3 +65,7 @@ Flask-Salt
 2. 增加文件判断脚本（diff.py）
 3. 修改gitinfo.py，将文件路径存入redis中，配合diff.py使用
 4. 增加项目图片
+
+2017/03/15:
+
+暂时不更新项目
